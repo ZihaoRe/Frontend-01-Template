@@ -7,4 +7,5 @@
 - 架构能力
 - 工程能力 
 
-前端知识脑图 
+补全后的知识脑图：
+![前端知识脑图](https://github.com/ZihaoRe/Frontend-01-Template/blob/master/week01/yuqueMind.png "前端知识脑图")
