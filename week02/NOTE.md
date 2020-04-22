@@ -40,7 +40,7 @@
 <ExponentiationExpression> = <MultiplicativeExpression> |
     <MultiplicativeExpression> "*" <ExponentiationExpression>  （右结合）
 ```
-图灵完备性： 一切可计算的问题都能计算，这样的虚拟机或者编程语言就叫图灵完备的
+图灵完备性： 一系列操作数据的规则（如指令集、编程语言、细胞自动机）按照一定的顺序可以计算出结果，被称为图灵完备（turing complete）
     命名式 --- 图灵机
         goto
         if while
