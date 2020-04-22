@@ -48,8 +48,8 @@
     声明式 --- lambda
         递归
     
-    动态： Runtime
-    静态： 产品开发、Compiletime
+    动态： Runtime，类型检查在运行时
+    静态： 产品开发、Compiletime，类型检查在运行前
     
 Unicode 字符集 Blocks Cate
 
