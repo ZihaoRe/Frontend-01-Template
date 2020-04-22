@@ -47,8 +47,6 @@
         if while
     声明式 --- lambda
         递归
-
-动态与静态
     
     动态： Runtime
     静态： 产品开发、Compiletime
