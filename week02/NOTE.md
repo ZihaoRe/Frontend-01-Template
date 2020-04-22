@@ -41,6 +41,7 @@
     <MultiplicativeExpression> "*" <ExponentiationExpression>  （右结合）
 ```
 图灵完备性： 一系列操作数据的规则（如指令集、编程语言、细胞自动机）按照一定的顺序可以计算出结果，被称为图灵完备（turing complete）
+    
     命名式 --- 图灵机
         goto
         if while
@@ -48,8 +49,10 @@
         递归
 
 动态与静态
+    
     动态： Runtime
     静态： 产品开发、Compiletime
+    
 Unicode 字符集 Blocks Cate
 
 
