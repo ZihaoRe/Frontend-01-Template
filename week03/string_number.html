@@ -1,0 +1,43 @@
+<script>
+    function convertStringToNumber(string, x) {
+        x = x || 10;
+        var chars = string.split("");
+        var integer = 0;
+        var i = 0;
+        while (i < chars.length && chars[i] !== ".") {
+            integer *= x;
+            integer += chars[i].codePointAt(0) - '0'.codePointAt(0);
+            i++;
+        }
+        if (chars[i] === ".") {
+            i++;
+        }
+        var fraction = 1;
+        while (i < chars.length) {
+            fraction /= x;
+            integer += (chars[i].codePointAt(0) - '0'.codePointAt(0)) * fraction;
+            i++
+        }
+        return integer;
+    }
+
+    function convertNumberToString(number, x) {
+        x = x || 10;
+        var integer = Math.floor(number);
+        var fraction = number - integer;
+        var string = '';
+        while (integer > 0) {
+            string = String(integer % x) + string;
+            integer = Math.floor(integer / x);
+        }
+        if (fraction !== 0) {
+            string += "."
+            while (fraction < 1 && fraction > 0) {
+                fraction = fraction * x;
+                string += String(Math.round(fraction));
+                fraction = fraction - Math.round(fraction);
+            }
+        }
+        return string;
+    }
+</script>
