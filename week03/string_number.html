@@ -1,6 +1,5 @@
 <script>
-    function convertStringToNumber(string, x) {
-        x = x || 10;
+    function convertStringToNumber(string, x = 10) {
         var chars = string.split("");
         var integer = 0;
         var i = 0;
@@ -21,23 +20,25 @@
         return integer;
     }
 
-    function convertNumberToString(number, x) {
-        x = x || 10;
+    function convertNumberToString(number, x = 10) {
+        var string = '';
+        var prefix = number < 0? '-':'';
+        number = number < 0? Math.abs(number):number;
         var integer = Math.floor(number);
         var fraction = number - integer;
-        var string = '';
         while (integer > 0) {
             string = String(integer % x) + string;
             integer = Math.floor(integer / x);
         }
+        let fractionLen = String(number).split('.')[1].length;
         if (fraction !== 0) {
             string += "."
             while (fraction < 1 && fraction > 0) {
                 fraction = fraction * x;
-                string += String(Math.round(fraction));
-                fraction = fraction - Math.round(fraction);
+                string += String(Math.floor(fraction));
+                fraction = fraction - Math.floor(fraction);
             }
         }
-        return string;
+        return prefix + Number(string).toFixed(Math.min(fractionLen, 20));
     }
 </script>
