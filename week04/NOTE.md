@@ -51,6 +51,25 @@ afoo()
 //第二个宏任务  
 //   2  
 //   3
+
+async function async1() {
+    console.log('async1 start');
+    await async2();
+    console.log('async1 end');
+}
+async function async2() {
+    console.log('async2');
+}
+async1();
+new Promise(resolve =>{
+    console.log('promise1');
+    resolve();
+}).then(function () {
+    console.log('promise2');
+});
+
+//async1 start, async2, promise1 同步代码
+//微任务1 async end, 微任务2 promise2
 ```
 
 
