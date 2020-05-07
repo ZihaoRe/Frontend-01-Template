@@ -37,7 +37,7 @@ console.log('script end');
 
 微任务可以理解是在当前宏任务执行结束后立即执行的任务。也就是说，在当前宏任务后，下一个宏任务之前，在渲染之前。
 所以它的响应速度相比setTimeout（setTimeout是task）会更快，因为无需等渲染。也就是说，在某一个 macrotask 执行完后，就会将在它执行期间产生的所有 microtask 都执行完毕（在渲染前）
-###示例
+### 示例
 ```js
 new Promise(resolve => resolve()).then(()=>console.log(1))
 
