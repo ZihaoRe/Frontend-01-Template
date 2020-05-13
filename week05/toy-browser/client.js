@@ -111,7 +111,7 @@ class ResponseParser {
                 this.current = this.WAITING_HEADER_SPACE;
             } else if (char === "\r") {//结束接收所有header，开始准备接收body
                 this.current = this.WAITING_HEADER_BLOCK_END;//body之前会有一个\n
-                //这个时候开始创建body parser，因为在解析完header之前不知道用什么样的encoding去解析
+                //这个时候开始创建body parser，因为在解析完header之前不知道用什么样的transfer encoding去解析
                 if (this.headers['Transfer-Encoding'] === 'chunked') {
                     this.bodyParser = new TrunkedBodyParser();
                 } //else...为了简单其他encoding的情况忽略
@@ -158,9 +158,9 @@ class TrunkedBodyParser {
         this.current = this.WAITING_LENGTH;
     }
     receiveChar(char) {//每个chunk是一行，所有的chunk总是以0为结束,每次读取一个数字，后读固定长度字符，忽略掉所有的\r\n
-        // chun读入例子如下
+        // chunk读入例子如下
         // "2"
-        // "\r"k
+        // "\r"
         // "\n"
         // "o"
         // "k"
