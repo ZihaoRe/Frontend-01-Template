@@ -41,8 +41,9 @@ ${this.bodyText}`;
             connection.on("data", (data) => {
                 // 这里返回的是流式数据，data事件可能会触发很多次，需要用状态机来parse
                 parser.receive(data.toString());
-                console.log(parser.headers);
-                // resolve(data.toString());
+                if (parser.isFinished) {
+                    resolve(parser.response);
+                }
                 connection.end();
             })
             connection.on("error", (err) => {
@@ -77,11 +78,13 @@ class ResponseParser {
         return this.bodyParser && this.bodyParser.isFinished;
     }
     get response() {
+        //HTTP 1.1 200 OK
         this.statusLine.match(/HTTP\/1.1 ([0-9]+) ([s\S]+)/);
         return {
             statusCode: RegExp.$1,
             statusText: RegExp.$2,
-            headers: this.headers
+            headers: this.headers,
+            body: this.bodyParser.content.join("")
         }
     }
     //处理字符流，一般情况下这里是个buffer，这里简化处理
@@ -144,39 +147,46 @@ class ResponseParser {
 
 class TrunkedBodyParser {
     constructor() {
-        this.WAITING_LENGTH = 0;
+        this.WAITING_LENGTH = 0;//开始，等待获取chunk的长度
         this.WAITING_LENGTH_LINE_END = 1;
         this.READING_TRUNK = 2;
         this.WAITING_NEW_LINE = 3;
         this.WAITING_NEW_LINE_END = 4;
-        this.length = 0;//计数器
-        this.content = [];
-        this.isFinished = false;
-        this.currrent = this.WAITING_LENGTH;
+        this.length = 0;//计数器，用来计算每个chunk已经读了多少长度
+        this.content = [];//用数组保存chunk内容
+        this.isFinished = false;//
+        this.current = this.WAITING_LENGTH;
     }
-    receiveChar(char) {//chunk 总是以0为结束。每次读取一个字符
-        // console.log(JSON.stringify(char));
-        // if (this.currrent === this.WAITING_LENGTH) {
-        //     if (char === '\r') {
-        //         if (this.length === 0) {
-        //             this.isFinished = true;
-        //         }
-        //         this.current = this.WAITING_LENGTH_LINE_END;
-        //     } else {
-        //         this.length *= 10;
-        //         this.length += char.charCodeAt(0) - "0".charCodeAt(0);
-        //     }
-        // } else if (this.currrent === this.WAITING_LENGTH_LINE_END) {
-        //     if (char === "\n") {
-        //         this.current = this.READING_TRUNK;
-        //     }
-        // } else if (this.current === this.READING_TRUNK) {
-        //     this.content.push(char);
-        //     this.length--;
-        //     if (this.length === 0) {
-        //
-        //     }
-        // }
+    receiveChar(char) {//每个chunk是一行，所有的chunk总是以0为结束,每次读取一个数字，后读固定长度字符，忽略掉所有的\r\n
+        if (this.current === this.WAITING_LENGTH) {
+            if (char === '\r') {//已经得到chunk长度，准备结束读取chunk长度
+                if (this.length === 0) {//结束读取chunk长度时长度为0，说明以0结尾，结束body parser
+                    this.isFinished = true;
+                }
+                this.current = this.WAITING_LENGTH_LINE_END;
+            } else {//获取即将读取的chunk长度，长度本身也是单个字符，所以要用十进制累加得到长度数字
+                this.length *= 10;
+                this.length += (char.charCodeAt(0) - "0".charCodeAt(0)); //Number(char)
+            }
+        } else if (this.current === this.WAITING_LENGTH_LINE_END) {
+            if (char === "\n") {//结束读取chunk长度，开始读取chunk
+                this.current = this.READING_TRUNK;
+            }
+        } else if (this.current === this.READING_TRUNK) {
+            this.content.push(char);
+            this.length--;
+            if (this.length === 0) {
+                this.current = this.WAITING_NEW_LINE;//当前这个chunk读完了，准备下一个
+            }
+        } else if (this.current === this.WAITING_NEW_LINE) {
+            if (char === "\r") {//处理\r
+                this.current = this.WAITING_NEW_LINE_END;
+            }
+        } else if (this.current === this.WAITING_NEW_LINE_END) {
+            if (char === "\n") {//处理\n
+                this.current = this.WAITING_LENGTH;//准备读取下一个chunk的长度
+            }
+        }
     }
 }
 
@@ -194,7 +204,7 @@ void (async function () {
         }
     })
     let response = await request.send();
-    // console.log(response);
+    console.log(response);
 })()
 // const client = net.createConnection({
 //     host: "127.0.0.1",
