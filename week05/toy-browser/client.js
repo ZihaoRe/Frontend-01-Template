@@ -158,6 +158,20 @@ class TrunkedBodyParser {
         this.current = this.WAITING_LENGTH;
     }
     receiveChar(char) {//每个chunk是一行，所有的chunk总是以0为结束,每次读取一个数字，后读固定长度字符，忽略掉所有的\r\n
+        // chun读入例子如下
+        // "2"
+        // "\r"k
+        // "\n"
+        // "o"
+        // "k"
+        // "\r"
+        // "\n"
+        // "0"
+        // "\r"
+        // "\n"
+        // "\r"
+        // "\n"
+        console.log(JSON.stringify(char))
         if (this.current === this.WAITING_LENGTH) {
             if (char === '\r') {//已经得到chunk长度，准备结束读取chunk长度
                 if (this.length === 0) {//结束读取chunk长度时长度为0，说明以0结尾，结束body parser
