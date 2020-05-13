@@ -169,16 +169,14 @@ void (async function () {
 // }, () => {
 //     // 'connect' listener.
 //     console.log('connected to server!');
-//     // client.write('POST / HTTP/1.1\r\n');
-//     // client.write('Host: 127.0.0.1\r\n');
-//     // // client.write('Content-Length: 11\r\n');
-//     // client.write('Content-Type: application/x-www-form-urlencoded\r\n');
-//     // client.write('\r\n');
-//     // client.write('\r\n');
-//     // client.write("name=winter\r\n");
+//     client.write('POST / HTTP/1.1\r\n');
+//     client.write('Content-Type: application/x-www-form-urlencoded\r\n');
+//     client.write('Content-Length: 11\r\n');
+//     client.write('\r\n');
+//     client.write("name=winter");
 // });
 // client.on('data', (data) => {
-//     console.log(data.toString())
+//     console.log(data.toString(), "----")
 //     client.end()
 // });
 // client.on('end', () => {
