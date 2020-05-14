@@ -179,8 +179,8 @@ class TrunkedBodyParser {
                 }
                 this.current = this.WAITING_LENGTH_LINE_END;
             } else {//获取即将读取的chunk长度，长度本身也是单个字符，所以要用十进制累加得到长度数字
-                this.length *= 10;
-                this.length += (char.charCodeAt(0) - "0".charCodeAt(0)); //Number(char)
+                this.length *= 16;//这里传来的是16进制
+                this.length += parseInt(char, 16); //Number(char)
             }
         } else if (this.current === this.WAITING_LENGTH_LINE_END) {
             if (char === "\n") {//结束读取chunk长度，开始读取chunk
