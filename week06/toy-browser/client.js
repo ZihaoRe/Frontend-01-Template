@@ -171,7 +171,6 @@ class TrunkedBodyParser {
         // "\n"
         // "\r"
         // "\n"
-        console.log(JSON.stringify(char))
         if (this.current === this.WAITING_LENGTH) {
             if (char === '\r') {//已经得到chunk长度，准备结束读取chunk长度
                 if (this.length === 0) {//结束读取chunk长度时长度为0，说明以0结尾，结束body parser
@@ -218,25 +217,6 @@ void (async function () {
         }
     })
     let response = await request.send();
-    console.log(response);
     parser.parserHTML(response.body);//这里实际不是等全部body解析返回之后才传给html parser解析的
 })()
-// const client = net.createConnection({
-//     host: "127.0.0.1",
-//     port: 8088
-// }, () => {
-//     // 'connect' listener.
-//     console.log('connected to server!');
-//     client.write('POST / HTTP/1.1\r\n');
-//     client.write('Content-Type: application/x-www-form-urlencoded\r\n');
-//     client.write('Content-Length: 11\r\n');
-//     client.write('\r\n');
-//     client.write("name=winter");
-// });
-// client.on('data', (data) => {
-//     console.log(data.toString(), "----")
-//     client.end()
-// });
-// client.on('end', () => {
-//     console.log('disconnected from server');
-// });
+

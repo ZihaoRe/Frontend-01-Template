@@ -68,7 +68,47 @@ function compare(sp1, sp2) {
 }
 
 function emit(token) {
-    console.log(token)
+    let top = stack[stack.length - 1];//栈顶
+    if (token.type === "startTag") {
+        let element = {
+            type: "element",
+            children: [],
+            attributes: []
+        };
+
+        element.tagName = token.tagName;
+        for (let p in token) {
+            if (p !== "type" && p !== "tagName" && p !== "isSelfClosing") {
+                element["attributes"].push({
+                    name: p,
+                    value: token[p]
+                })
+            }
+        }
+        top.children.push(element);
+        element.parent = top;
+
+        if (!token.isSelfClosing) {//如果不是自闭合标签的话进栈，等待匹配它的endTag再出栈
+            stack.push(element);
+        }
+        currentTextNode = null;
+    } else if (token.type === "endTag") {
+        if (top.tagName !== token.tagName) {
+            throw new Error("Tag doesn't match!");
+        } else {
+            stack.pop();
+        }
+        currentTextNode = null;
+    } else if (token.type === "text") {
+        if (currentTextNode === null) {
+            currentTextNode = {
+                type: "text",
+                content: ""
+            }
+            top.children.push(currentTextNode);
+        }
+        currentTextNode.content += token.content;
+    }
 }
 
 const EOF = Symbol("EOF");//EOF: End Of File, 唯一标识，解析结束
@@ -248,8 +288,9 @@ function UnquotedAttributeValue (c) {//无引号形式的属性值
     }
 }
 function selfClosingStartTag (c) {
-    if (c === ">") {//记录自闭合标签，回到data状态
+    if (c === ">") {//emit自闭合标签，回到data状态
         currentToken.isSelfClosing = true;
+        emit(currentToken);
         return data;
     } else if (c === EOF) {//eof-in-tag parse error
 
@@ -258,17 +299,18 @@ function selfClosingStartTag (c) {
     }
 }
 function endTagOpen (c) {
-    if (c.match(/^[a-zA-Z]$/)) {//接收end tag的tagName
+    if (c.match(/^[a-zA-Z]$/)) {//Create a new end tag token, set its tag name to the empty string. Reconsume in the tag name state.
+        //接收end tag的tagName
         currentToken = {
             type: "endTag",
             tagName: ""
         }
         return tagName(c);
-    } else if (c === ">") {
+    } else if (c === ">") {//missing-end-tag-name parse error
 
-    } else if (c === EOF) {//结束
+    } else if (c === EOF) {//eof-before-tag-name parse error
 
-    } else {
+    } else {//invalid-first-character-of-tag-name parse error
 
     }
 }
@@ -279,4 +321,5 @@ module.exports.parserHTML = function parserHTML(html) { //用函数实现的状�
         state = state(c);
     }
     state = state(EOF);
+    console.log(stack[0]);
 }
