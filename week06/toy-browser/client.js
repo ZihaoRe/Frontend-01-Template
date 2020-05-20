@@ -217,6 +217,6 @@ void (async function () {
         }
     })
     let response = await request.send();
-    parser.parserHTML(response.body);//这里实际不是等全部body解析返回之后才传给html parser解析的
+    console.log(JSON.stringify(parser.parserHTML(response.body),null, "    "));//这里实际不是等全部body解析返回之后才传给html parser解析的
 })()
 

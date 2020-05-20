@@ -1,71 +1,10 @@
-const css = require("css");
+const computeCSS = require("./computeCSS");
+
+
 let currentToken = null;
 let currentAttribute = null;
 let stack = [{type: "document", children:[]}];
 let currentTextNode = null;
-
-//将css暂存进一个数组中
-let rules = [];
-function addCSSRules(text) {//媒体查询的逻辑应该在这里
-    let ast = css.parse(text);
-    rules.push(...ast.stylesheet.rules);
-}
-
-function computeCSS(element) {
-    let elements = stack.slice().reverse();//slice() 复制数组,倒序是因为匹配选择器是从内向外的
-    if (!element.computedStyle) {
-        element.computedStyle = {};
-    }
-    for (let rule of rules) {
-        let selectorParts = rule.selectors[0].split(" ").reverse();
-
-        if (!match(element, selectorParts[0])) {//reverse后的第一条都不匹配就不需要继续匹配了，直接看下一条
-            continue;
-        }
-        let matched = false;
-        let j = 1;
-        for (let i=0;i < elements.length;i++) {
-            if (match(elements[i], selectorParts[j])) {
-                j++;
-            }
-        }
-        if (j >= selectorParts.length) {
-            matched = true;
-        }
-
-        if (matched) {
-            //匹配到的话，加入dom树
-            let computedStyle = element.computedStyle;
-            for (let declaration of rule.declarations) {
-                if (!computedStyle[declaration.property]) {
-                    computedStyle[declaration.property] = {}
-                }
-                computedStyle[declaration.property].value = declaration.value;
-            }
-            console.log(element.computedStyle);
-        }
-    }
-    // let inlineStyle = element.attributes.filter(p => p.name === "style");//原本inline css的处理，toy中略过
-    // css.parse("* {"+ inlineStyle+"}");
-    // sp = [1, 0, 0, 0];
-}
-function match(element, selector) {
-
-}
-function specificity() {
-
-}
-function compare(sp1, sp2) {
-    if (sp1[0] - sp2[0]) {
-
-    } else if (sp1[1] - sp2[1]) {
-
-    } else if (sp1[2] - sp2[2]) {
-
-    } else if (sp1[3] - sp2[3]) {
-
-    }
-}
 
 function emit(token) {
     let top = stack[stack.length - 1];//栈顶
@@ -85,8 +24,10 @@ function emit(token) {
                 })
             }
         }
+        //创建一个元素后立刻计算，因为计算css应该尽可能早，很多css规则需要依赖它的祖先节点。其他情况引入css可能会发生css重新计算、重绘、重排
+        computeCSS.computeCSS(element, stack);
         top.children.push(element);
-        element.parent = top;
+        //element.parent = top;//加一个parent指针指向父节点
 
         if (!token.isSelfClosing) {//如果不是自闭合标签的话进栈，等待匹配它的endTag再出栈
             stack.push(element);
@@ -96,6 +37,10 @@ function emit(token) {
         if (top.tagName !== token.tagName) {
             throw new Error("Tag doesn't match!");
         } else {
+            /* 遇到style标签时，添加css规则 */
+            if (top.tagName === "style") {
+                computeCSS.addCSSRules(top.children[0].content);//style标签下的文本节点内容
+            }
             stack.pop();
         }
         currentTextNode = null;
@@ -321,5 +266,5 @@ module.exports.parserHTML = function parserHTML(html) { //用函数实现的状�
         state = state(c);
     }
     state = state(EOF);
-    console.log(stack[0]);
+    return stack[0];
 }
