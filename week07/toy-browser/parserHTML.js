@@ -43,7 +43,7 @@ function emit(token) {
             if (top.tagName === "style") {
                 computeCSS.addCSSRules(top.children[0].content);//style标签下的文本节点内容
             }
-            // layout(top);//toy中简化处理，拿到子元素之后才layout(自闭合标签layout在start tag中).实际正常流中start tag就会开始layout
+            layout(top);//toy中简化处理，拿到子元素之后才layout(自闭合标签layout在start tag中).实际正常流中start tag就会开始layout
             stack.pop();
         }
         currentTextNode = null;
@@ -206,11 +206,12 @@ function afterQuotedAttributeValue (c) {//
     } else if (c === "/") {//自闭合标签
         return selfClosingStartTag;
     } else if (c === ">") {//标签结束，提交token并返回data状态
-
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        emit(currentToken);
+        return data;
     } else if (c === EOF) {//eof-in-tag parse error
 
     } else {//todo：存疑，标准里面这里是报错，但是示例里面是记录属性值并进入双引号属性值状态
-
     }
 }
 function UnquotedAttributeValue (c) {//无引号形式的属性值

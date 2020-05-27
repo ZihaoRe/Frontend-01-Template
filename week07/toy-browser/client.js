@@ -1,5 +1,8 @@
 const net = require('net');
 const parser = require('./parserHTML');
+const render = require('./render');
+const images = require('images');
+
 class Request {
     //method, url = host + port + path
     //body: k/v
@@ -217,6 +220,11 @@ void (async function () {
         }
     })
     let response = await request.send();
-    console.log(JSON.stringify(parser.parserHTML(response.body),null, "    "));//这里实际不是等全部body解析返回之后才传给html parser解析的
+    // console.log(JSON.stringify(parser.parserHTML(response.body),null, "    "));//这里实际不是等全部body解析返回之后才传给html parser解析的
+    let dom = parser.parserHTML(response.body)
+    let viewport = images(800, 600)
+    render(viewport, dom)
+
+    viewport.save('viewport.jpg')
 })()
 

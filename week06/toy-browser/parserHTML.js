@@ -203,7 +203,9 @@ function afterQuotedAttributeValue (c) {//
     } else if (c === "/") {//自闭合标签
         return selfClosingStartTag;
     } else if (c === ">") {//标签结束，提交token并返回data状态
-
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        emit(currentToken);
+        return data;
     } else if (c === EOF) {//eof-in-tag parse error
 
     } else {//todo：存疑，标准里面这里是报错，但是示例里面是记录属性值并进入双引号属性值状态
