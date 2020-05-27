@@ -1,6 +1,6 @@
 # week7
-flex布局：
-主要属性flex、flex-direction、flex-basis、flex-grow、flex-shrink、justify-content、align-items
+
+![CSS脑图](https://github.com/ZihaoRe/Frontend-01-Template/blob/master/week07/yuque_diagram.png "CSS脑图")
 
 ```js
 var list = document.querySelector("#container").children;

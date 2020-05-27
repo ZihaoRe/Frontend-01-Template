@@ -8,20 +8,26 @@ const server = http.createServer((req, res) => {
     res.end(`<html maaa=a >
 <head>
     <style>
-body div #myid{
+#father-flex {
+    display: flex;
+    width:200px;
+    background-color: green;
+}
+#flex0{
     width:100px;
     background-color: #ff5000;
 }
-body div img{
+.flex1{
     width:30px;
+    height: 100px;
     background-color: #ff1111;
 }
     </style>
 </head>
 <body>
-    <div>
-        <img id="myid"/>
-        <img />
+    <div id="father-flex">
+        <div id="flex0"/>
+        <div class="flex1">
     </div>
 </body>
 </html>`);

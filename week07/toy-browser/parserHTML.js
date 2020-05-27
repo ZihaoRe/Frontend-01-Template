@@ -31,6 +31,8 @@ function emit(token) {
 
         if (!token.isSelfClosing) {//如果不是自闭合标签的话进栈，等待匹配它的endTag再出栈
             stack.push(element);
+        } else {
+            // layout(element);//自闭合标签layout，但是toy只处理flex所以忽略
         }
         currentTextNode = null;
     } else if (token.type === "endTag") {
@@ -41,6 +43,7 @@ function emit(token) {
             if (top.tagName === "style") {
                 computeCSS.addCSSRules(top.children[0].content);//style标签下的文本节点内容
             }
+            // layout(top);//toy中简化处理，拿到子元素之后才layout(自闭合标签layout在start tag中).实际正常流中start tag就会开始layout
             stack.pop();
         }
         currentTextNode = null;
