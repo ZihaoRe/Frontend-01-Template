@@ -11,15 +11,16 @@ const server = http.createServer((req, res) => {
         #father-flex {
             display: flex;
             width:200px;
-            background-color: rgb(25, 255, 255);
+            background-color: rgb(25,255, 255 );
         }
         #flex0{
             width:100px;
-            background-color: rgb(255, 123, 1);
+            height: 100px;
+            background-color: rgb(255,123,1);
         }
         .flex1{
             width:30px;
-            height: 100px;
+            height: 30px;
             background-color: rgb(21,123,1);
         }
     </style>
