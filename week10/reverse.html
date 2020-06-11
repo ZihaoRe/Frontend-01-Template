@@ -1,0 +1,35 @@
+<ul id="test">
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+    <li>5</li>
+    <li>6</li>
+    <li>7</li>
+    <li>8</li>
+    <li>9</li>
+    <li>10</li>
+</ul>
+<script type="application/javascript">
+    let element = document.querySelector("#test");
+
+    /* normal */
+
+    // let arr = element.childNodes;
+    // for (let i=arr.length - 1;i>=0;i--) {
+    //     element.appendChild(arr[i]);
+    // }
+
+    /* range api */
+
+    let range = new Range();
+    range.selectNodeContents(element);
+
+    let fragment= range.extractContents();
+    let i = fragment.childNodes.length;
+    while (i--) {
+        fragment.appendChild(fragment.childNodes[i]);
+    }
+    element.appendChild(fragment);
+
+</script>
