@@ -49,6 +49,9 @@ clear属性不允许被清除浮动的元素的左边/右边挨着浮动元素�
 inline box如果中间没有任何文字的话基线在底部
 
 #### BFC(block formatting context)
+
+如果一个元素具有 BFC，内部子元素再怎么翻江倒海、翻云覆雨，都不会影响外部的元素。所以，BFC 元素是不可能发生 margin 重叠的，因为 margin 重叠是会影响外部的元素的；BFC 元素也可以用来清除浮动的影响，因为如果不清除，子元素浮动则父元素高度塌陷，必然会影响后面元素布局和定位，这显然有违 BFC 元素的子元素不会影响外部元素的设定
+
 - block-level表示可以被放入BFC
 - block-container表示可以容纳BFC
 - block-box = block-level + block-container，大部分只会发生在display:block情况下
