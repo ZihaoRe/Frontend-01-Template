@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .cell {
+        display:inline-block;
+        width:6px;
+        height:6px;
+        background-color: gray;
+        border-bottom:solid 1px white;
+        border-right:solid 1px white;
+        vertical-align: middle;
+    }
+    #map{
+        font-size: 0;
+        width:701px;
+    }
+</style>
+<body>
+<div id="map"></div>
+<button onclick="localStorage.map = JSON.stringify(map)">save</button>
+<button onclick="localStorage.map = '';location.reload()">clear</button>
+</body>
+<script>
+    let map = localStorage.map ? JSON.parse(localStorage.map) : new Array(10000).fill(0);
+    let container = document.getElementById("map");
+    for (let y=0;y<100;y++) {
+        for (let x=0;x<100;x++) {
+            let cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.style.backgroundColor = map[y * 100 + x] ? "black" : "";
+            cell.addEventListener("mouseover", ()=>{
+                if (mouse) {
+                    if (clear) {
+                        cell.style.backgroundColor = "";
+                        map[y * 100 + x] = 0;
+                    } else {
+                        cell.style.backgroundColor = "black";
+                        map[y * 100 + x] = 1;
+                    }
+                }
+            })
+            container.appendChild(cell)
+        }
+    }
+    let mouse = false;
+    let clear = false;
+    document.addEventListener("mousedown", e => {
+        mouse = true
+        clear = e.which === 3;
+    })
+    document.addEventListener("mouseup", e => {
+        mouse = false
+    })
+    document.addEventListener("contextmenu", e=> {
+        e.preventDefault();
+    })
+</script>
+</html>
