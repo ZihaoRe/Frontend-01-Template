@@ -15,3 +15,5 @@
 
 * getClientRects
 * getBoundingClientRect
+
+Web API：https://www.yuque.com/u1026257/emhbtz/hnxr3g
