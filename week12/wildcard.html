@@ -38,7 +38,7 @@
 
         for (let j = 0; j <= source.length - lastIndex && pattern[pattern.length - 1] !== "*";j++) {
             if (pattern[pattern.length - j] !== source[source.length - j] &&
-                pattern[pattern.length - 1] !== "?") {
+                pattern[pattern.length - j] !== "?") {
                 return false
             }
         }
