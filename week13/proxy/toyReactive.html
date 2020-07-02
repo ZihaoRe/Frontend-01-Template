@@ -1,0 +1,70 @@
+<input id="test">
+<script type="application/javascript">
+    let object = {
+        a:1,
+        b:2
+    }
+    let usedReactivities = [];//用于依赖收集
+    let reactivities = new Map();
+
+    let handlersCollection = new Map();
+
+    function reactive(obj) {
+        if (reactivities.has(obj)) {
+            return reactivities.get(obj);//防止重复包装
+        }
+
+        let proxy = new Proxy(obj, {
+            get(obj, prop) {
+                usedReactivities.push([obj, prop])//利用get知道要收集哪个依赖
+                if (typeof obj[prop] === "object") {
+                    return reactive(obj[prop]);
+                }
+                return obj[prop];
+            },
+            set(obj, prop, val) {
+                obj[prop] = val
+                if (handlersCollection.has(obj))//set时根据obj和prop查找是否有对应的handler
+                    if (handlersCollection.get(obj).get(prop))
+                        for (let handler of handlersCollection.get(obj).get(prop))
+                            handler()
+                return obj[prop] = val;
+            }
+        });
+        reactivities.set(obj, proxy);
+        reactivities.set(proxy, proxy);
+        return proxy;
+    }
+
+    function effect(handler) {
+        usedReactivities = [];
+        handler();//立即执行时利用get获取了当前obj和prop
+        console.log(usedReactivities);
+        for (let usedReactivity of usedReactivities) {//依赖收集过程，根据obj和prop存储handler
+            let [obj, prop] = usedReactivity;
+            console.log([obj, prop]);
+            if (!handlersCollection.has(obj)) {
+                handlersCollection.set(obj, new Map());
+            }
+            if (!handlersCollection.get(obj).has(prop)) {
+                handlersCollection.get(obj).set(prop, []);
+            }
+
+            handlersCollection.get(obj).get(prop).push(handler);
+        }
+    }
+
+    let dummy;
+    let proxy = reactive(object);
+
+    effect(() => dummy = proxy.a);
+    console.log(dummy);
+    proxy.a = 2;
+    console.log(dummy);
+
+    let input = reactive({r:1});
+    effect(() => document.querySelector("#test").value = input.r);
+    document.querySelector("#test").addEventListener("input", event => input.r = event.target.value);
+
+
+</script>
