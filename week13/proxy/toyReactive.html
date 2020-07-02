@@ -10,8 +10,8 @@
     let handlersCollection = new Map();
 
     function reactive(obj) {
-        if (reactivities.has(obj)) {
-            return reactivities.get(obj);//防止重复包装
+        if (reactivities.has(obj)) {//防止重复包装
+            return reactivities.get(obj);
         }
 
         let proxy = new Proxy(obj, {
@@ -31,7 +31,7 @@
                 return obj[prop] = val;
             }
         });
-        reactivities.set(obj, proxy);
+        reactivities.set(obj, proxy);//防止重复包装,如果包装的对象本身就是个reactive对象，直接返回它
         reactivities.set(proxy, proxy);
         return proxy;
     }
