@@ -91,4 +91,3 @@ let component = (
 )
 component.mountTo(document.body);
 console.log(component);
-// component.setAttribute("id", "a");
