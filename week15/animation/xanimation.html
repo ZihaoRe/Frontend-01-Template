@@ -1,0 +1,47 @@
+<style>
+    #el {
+        width: 100px;
+        height: 100px;
+        background-color: skyblue;
+    }
+    #el2 {
+        width: 100px;
+        height: 100px;
+        background-color: skyblue;
+    }
+</style>
+<div id="el"></div>
+<div id="el2"></div>
+
+<button id="pause">pause</button>
+<button id="resume">resume</button>
+<button id="el2-start">el2 start</button>
+
+<script type="module">
+    import { Timeline, Animation } from "./animation.js";
+    import { cubicBezier } from "./cubicBezier.js";
+
+    let linear = t => t;
+    let ease = cubicBezier(.25,.1,.25,1);
+
+    let el = document.querySelector("#el");
+    let el2 = document.querySelector("#el2");
+    let tl = new Timeline;
+
+    tl.add(new Animation(el.style, "transform", v => `translateX(${v}px)`, 0, 500, 10000, 0, linear));
+    tl.start()
+
+    // document.querySelector("#el2").style.transform = "translateX(200px)"
+    document.querySelector("#pause").addEventListener("click", function () {
+        tl.pause();
+    });
+    document.querySelector("#resume").addEventListener("click", function () {
+        tl.resume();
+    });
+    // document.querySelector("#restart").addEventListener("click", function () {
+    //     tl.restart();
+    // });
+    document.querySelector("#el2-start").addEventListener("click", function () {
+        tl.add(new Animation(el2.style, "transform", v => `translateX(${v}px)`, 0, 500, 10000, 0, linear), 0);
+    });
+</script>

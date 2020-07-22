@@ -46,6 +46,5 @@ module.exports = function (source, map) {
             }
         } 
     `
-    console.log(r)
     return r
 }

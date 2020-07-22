@@ -1,0 +1,19 @@
+<style>
+    #el {
+        width: 100px;
+        height: 100px;
+        background-color: skyblue;
+        transition: ease 5s;
+    }
+</style>
+<div id="el"></div>
+<script>
+    let el = document.querySelector("#el");
+    function start() {
+        el.style.transform = "translate(500px, 500px)";
+    }
+    function stop() {
+        el.style.transition = "none";
+        el.style.transform = getComputedStyle(el).getPropertyValue("transform");
+    }
+</script>
