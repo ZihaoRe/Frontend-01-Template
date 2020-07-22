@@ -18,7 +18,7 @@
 <button id="el2-start">el2 start</button>
 
 <script type="module">
-    import { Timeline, Animation } from "./animation.js";
+    import { Timeline, Animation, ColorAnimation } from "./animation.js";
     import { cubicBezier } from "./cubicBezier.js";
 
     let linear = t => t;
@@ -28,7 +28,7 @@
     let el2 = document.querySelector("#el2");
     let tl = new Timeline;
 
-    tl.add(new Animation(el.style, "transform", v => `translateX(${v}px)`, 0, 500, 10000, 0, linear));
+    tl.add(new Animation(el.style, "transform", 0, 500, 10000, 0, linear, v => `translateX(${v}px)`));
     tl.start()
 
     // document.querySelector("#el2").style.transform = "translateX(200px)"
@@ -42,6 +42,6 @@
     //     tl.restart();
     // });
     document.querySelector("#el2-start").addEventListener("click", function () {
-        tl.add(new Animation(el2.style, "transform", v => `translateX(${v}px)`, 0, 500, 10000, 0, linear), 0);
+        tl.add(new ColorAnimation(el2.style, "backgroundColor", {r:0, g:0, b:0, a:1}, {r:255, g:0, b:0, a:1}, 10000, 0, linear));
     });
 </script>
