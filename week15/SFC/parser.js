@@ -17,7 +17,7 @@ function emit(token){
         element.tagName = token.tagName;
 
         for(let p in token) {
-            if(p != "type" || p != "tagName")
+            if(p != "type" && p != "tagName")
                 element.attributes.push({
                     name: p,
                     value: token[p]
