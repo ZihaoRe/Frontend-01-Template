@@ -3,3 +3,4 @@
 node_modules/
 package-lock.json
 /week18/test-demo/.nyc_output/
+/week19/tt-example/.nyc_output/
