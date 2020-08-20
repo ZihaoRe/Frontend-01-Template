@@ -1,6 +1,6 @@
-// enableGusture(document.body);
+// enableGesture(document.body);
 
-export function enableGusture(element) {
+export function enableGesture(element) {
   let contexts = Object.create(null);
 
   let MOUSE_SYMBOL = Symbol('mouse');

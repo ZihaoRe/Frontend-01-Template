@@ -20,8 +20,8 @@ module.exports = class extends Generator {
       this.destinationPath('lib/createElement.js')
     );
     this.fs.copyTpl(
-      this.templatePath('lib/gusture.js'),
-      this.destinationPath('lib/gusture.js')
+      this.templatePath('lib/gesture.js'),
+      this.destinationPath('lib/gesture.js')
     );
     this.fs.copyTpl(
       this.templatePath('lib/animation.js'),

@@ -1,4 +1,4 @@
-import { enableGusture } from './gusture';
+import { enableGesture } from './gesture';
 
 export function createElement(Cls, attributes, ...children) {
   let o;
@@ -58,8 +58,8 @@ class Wrap {
       let eventName = RegExp.$1.replace(/^[\s\S]/, (c) => c.toLowerCase());
       this.addEventListener(eventName, val);
     }
-    if (name == 'enableGusture') {
-      enableGusture(this.root);
+    if (name == 'enableGesture') {
+      enableGesture(this.root);
     }
   }
   getAttribute(name) {
